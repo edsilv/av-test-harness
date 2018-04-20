@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mpeg dash</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <audio controls></audio>
+
+    <script>
+        var media = document.querySelector('audio');
+        var source = "https://resources.digirati.com/bl/C1685_98/vdc_100052359795.0x000019/index.m3u8";
+
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(source);
+            hls.attachMedia(media);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                media.play();
+            });
+        }
+        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+        // This is using the built-in support of the plain video element, without using hls.js.
+        else if (media.canPlayType('application/vnd.apple.mpegurl')) {
+            media.src = source;
+            media.addEventListener('canplay', function () {
+                media.play();
+            });
+        }
+    </script>
+</body>
+</html>
